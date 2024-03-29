@@ -21,6 +21,24 @@ Before running the program, ensure you have the following:
 ## Getting Started
 
 1. **Clone the Repository**: Clone this repository to your local machine.
+2. **Navigate to the Directory**: Move into the project directory.
+3. **Install Dependencies**: Install the required Python dependencies using pip.
+4. **Upload Files to Raspberry Pi Pico W**: Use Adafruit ampy to upload the Python files (`main.py`, `login.html`, `welcome.html`) to your Raspberry Pi Pico W.
+5. **Connect to Wi-Fi**: Modify the `connect_wifi_manually()` function in `main.py` to connect to your Wi-Fi network. You can either manually enter your SSID and password or scan for available networks.
+6. **Run the Program**: Safely eject the Raspberry Pi Pico W from your computer and power it on. The program will start running automatically.
+7. **Access the Web Interface**: Once the Raspberry Pi Pico W is connected to your Wi-Fi network, you can access the web interface by entering its IP address in a web browser.
 
-   ```bash
-   git clone https://github.com/yourusername/raspberry-pi-pico-w-webserver.git
+## Usage
+
+- Open a web browser and navigate to the IP address of your Raspberry Pi Pico W.
+- Follow the on-screen instructions to log in and interact with the microcontroller.
+- Toggle the LED on/off or perform other actions available in the web interface.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to Adafruit for their contributions to the Raspberry Pi Pico ecosystem.
+- Special thanks to the community for their support and feedback.
