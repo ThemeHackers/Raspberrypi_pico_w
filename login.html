@@ -1,80 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .login-container {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 400px;
-        width: 100%;
-        text-align: center;
-    }
-    .login-header {
-        margin-bottom: 20px;
-    }
-    .login-header h2 {
-        color: #1e90ff; /* สีเขียวเข้ม */
-    }
-    .input-group {
-        margin-bottom: 20px;
-    }
-    .input-group label {
-        display: block;
-        margin-bottom: 5px;
-    }
-    .input-group input {
-        width: 100%;
-        padding: 8px;
-        border-radius: 3px;
-        border: 1px solid #ccc;
-    }
-    button {
-        width: 100%;
-        padding: 10px;
-        background-color: #4caf50;
-        color: #fff;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #45a049;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Raspberrypi Pico W</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .login-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 25px 20px 15px rgba(0, 0, 0, 0.28);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            animation: slide-in-bck 0.5s ease-out;
+        }
+
+        .login-header {
+            margin-bottom: 25px;
+        }
+
+        .login-header h2 {
+            color: #333;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745; /* Green color */
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #218838; /* Darker green color on hover */
+        }
+
+        @keyframes slide-in-bck {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="login-container">
-    <div class="login-header">
-        <h2>Login</h2>
+    <div class="login-container">
+        <div class="login-header">
+                <h2>Login to Raspberrypi Pico W Webserver</h2>
+        </div>
+        <img src="https://th.element14.com/productimages/standard/en_GB/3996082-40.jpg" alt="Raspberry pi pico w">
+        <form action="/login_process.php" method="post">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
     </div>
-    <form action="/login_process.php" method="post">
-        <div class="input-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <div class="input-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-</div>
 
 </body>
 </html>
