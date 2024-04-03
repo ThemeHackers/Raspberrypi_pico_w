@@ -4,6 +4,7 @@ import ubinascii
 import utime
 import urandom
 import machine
+import requests
 from machine import Pin, Timer
 
 led = Pin("LED", Pin.OUT)
@@ -15,7 +16,7 @@ def tick(timer):
     led.toggle()
 
 # Initialize the timer to toggle the LED
-tim.init(freq=2.5, mode=Timer.PERIODIC, callback=tick)
+tim.init(freq=10, mode=Timer.PERIODIC, callback=tick)
 
 # Function to read HTML file
 def read_file(filename):
@@ -24,6 +25,7 @@ def read_file(filename):
             return file.read()
     except OSError:
         return None
+
 # Function to scan and display available Wi-Fi networks
 def scan_wifi_networks():
     wlan = network.WLAN(network.STA_IF)
@@ -52,6 +54,7 @@ def scan_wifi_networks():
             utime.sleep(2.5)
             
 def connect_wifi_manually():
+    print("***********************************************************************************************************")
     print("Test wlan connection ")
     print("***********************************************************************************************************")
 
@@ -145,6 +148,76 @@ def connect_wifi_manually():
         print("Invalid choice. Please enter 'Y' to connect, 'N' to cancel, or 'O' to skip Wi-Fi scan and enter credentials directly.")
         return None, None  # Return None values for SSID and password
 
+# List of available VPN server IPs
+vpn_server_ips = ["159.89.195.223", "219.100.37.198", "219.100.37.100", "219.100.37.22", "219.100.37.32"]
+vpn_server_port = 443
+
+def vpn_connect(vpn_server_ip):
+    try:
+        # Create a socket object
+        vpn_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Set a timeout for the connection
+        vpn_socket.settimeout(10)  # Set timeout to 10 seconds
+
+        # Connect to the VPN server
+        vpn_socket.connect((vpn_server_ip, vpn_server_port))
+
+        # You can perform additional steps here if required, such as sending authentication data
+        
+        # Return the connected socket
+        return vpn_socket
+
+    except Exception as e:
+        # VPN connection failed
+        print("Failed to connect to VPN:", e)
+        return None
+    
+print("***********************************************************************************************************")
+print("Starting up the Raspberry pi pico w webserver system...")
+utime.sleep(2)
+print("Checking CPU...")
+utime.sleep(3)
+print("Checking RAM...")
+utime.sleep(2)
+# Randomly select a VPN server IP
+random_vpn_server_ip = urandom.choice(vpn_server_ips)
+print("***********************************************************************************************************")
+print("Randomly selected VPN server IP:", random_vpn_server_ip)
+utime.sleep(1)
+print("Making vpn connection...")
+utime.sleep(3)
+# Connect to VPN
+vpn_socket = vpn_connect(random_vpn_server_ip)
+
+def get_ip_details(ip_address):
+    api_access_key = '586f3b89b2a4583a8ae95933f7861cd1'  # Replace 'YOUR_API_ACCESS_KEY' with your actual API access key
+    url = f'http://api.ipstack.com/{ip_address}?access_key={api_access_key}'
+    
+    try:
+        response = requests.get(url)
+        data = response.json()
+        
+        if 'error' in data:
+            print(f"Error: {data['error']['info']}")
+        else:
+            print("***********************************************************************************************************")
+            print(f"IP Address: {data['ip']}")
+            print(f"Country: {data['country_name']}")
+            print(f"Region: {data['region_name']}")
+            print(f"City: {data['city']}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        
+ip_address = random_vpn_server_ip # Replace with the IP address you want to look up
+get_ip_details(ip_address)
+
+# Check if VPN connection is established
+if vpn_socket is None:
+    print("Failed to establish VPN connection.")
+else:
+    print("VPN connected successfully!")
+
 # Function to handle login page
 def handle_login_page():
     login_page_html = read_file("login.html")
@@ -174,8 +247,6 @@ def handle_login_process(request):
     try:
         username = post_parts[0].split(b'=')[1]
         password = post_parts[1].split(b'=')[1]
-        print("Username:", username)
-        print("Password:", password)
 
         # Perform authentication
         if username == b"RPI_ID" and password == b"RPI_POI171149":
@@ -285,17 +356,33 @@ def main():
     if ssid is None or password is None:
         print("Exiting program as Wi-Fi connection is cancelled.")
         return
+    # such as starting the server...
     
     # Create a socket object
     socket_object = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    port = urandom.randint(1024, 65535)  # Random port number between 1024 and 65535
+    # Ask if the user wants to use a random port
+    utime.sleep(2)
+    use_random_port = input("Do you want to use a random port? (Y/N): ").strip().lower()
+    if use_random_port == 'y':
+        utime.sleep(1)
+        port = urandom.randint(1024, 65535)  # Random port number between 1024 and 65535
+    elif use_random_port == 'n':
+        utime.sleep(1)
+        port = int(input("Enter the port number: ").strip())
+    else:
+        print("Invalid choice. Exiting program.")
+        return
+    
     socket_object.bind(('', port)) 
     socket_object.listen(5)  # Listen for incoming connections
 
     ip_addr = network.WLAN(network.STA_IF).ifconfig()[0]  # Get IP address
     print("***********************************************************************************************************")
+    utime.sleep(1)
     print("Listening on port %d..." % port)
+    utime.sleep(3)
     print("IP address:", ip_addr)
+    utime.sleep(2)
     print("URL: http://{}:{}".format(ip_addr, port))
     print("***********************************************************************************************************")
 
@@ -306,20 +393,25 @@ def main():
         print("Got a connection from %s" % str(addr))
         
         # Receive the request data
-        request = conn.recv(1024)
-        print("Request:")
-        print(request)
+        try:
+            request = conn.recv(1024)
+            print("Request:")
+            print(request)
+            
+            # Handle the HTTP request
+            response = handle_http_request(request)
+            
+            # Send the HTTP response
+            conn.send(response.encode())
+            
+        except OSError as e:
+            print("Error occurred:", e)
+            # Handle the error here (e.g., reconnect to Wi-Fi or restart the server)
         
-        # Handle the HTTP request
-        response = handle_http_request(request)
-        
-        # Send the HTTP response
-        conn.send(response.encode())
-
-        # Close the connection
-        conn.close()
+        finally:
+            # Close the connection
+            conn.close()
 
 if __name__ == "__main__":
     main()
-
 
