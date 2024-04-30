@@ -1,108 +1,226 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login to Raspberrypi Pico W</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #333333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+      
+      @import url('https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400&display=swap');
+  
+      * {
+        font-family: 'Sulphur Point', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      
+      a {
+          text-decoration: none;
+      }
+      
+      img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 40%;
+      }
+      
+      h1 {
+          text-align: center;
+          font-size: 30px;
+          width: 100%
+      }
+      
+      .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        max-width: 350px;
+        min-height: 200px;
+        margin: auto;
+        padding: 1rem;
+        text-align: center;
+        position: relative;
+        border: 2px solid rgba(133, 250, 24, 0.94);
+        border-radius: 20px;
+        box-shadow: 0 6px 15px 0 rgba(223, 10, 223, 0.2);
+      }
+      
+      .card .profile {
+       border-radius: 50%;
+       max-width: 130px;
+      }
+      
+      .link {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 12px;
+      }
+      
+      .icon {
+        width: 30px;
+      }
+      
+      body.dark .icon.github {
+        filter: invert(1);
+      }
+      
+      body.dark {
+        background: #181828;
+      }
+      
+      body.dark .card {
+        color: rgb(8, 206, 51);
+        background: rgb(26, 25, 25);
+        box-shadow: 0 6px 15px 0 rgb(8, 206, 51);
+        border: 2px solid rgba(3, 247, 76, 0.8);
+        
+      }
+      
+      button {
+        all: unset;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
+      
+      form .field {
+          display: flex;
+          margin-bottom: 1rem;
         }
         
-        .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 25px 20px 15px rgba(0, 0, 0, 0.28);
-            padding: 40px;
-            width: 400px;
-            max-width: 90%;
-            text-align: center;
-            animation: slide-in-bck 0.5s ease-out;
-        }
-
-        .login-header {
-            margin-bottom: 25px;
-        }
-
-        .login-header h2 {
-            color: #333;
+        form input[type='password'],
+        form input[type='text'],
+        form input[type='submit'] {
+          border: none;
+          border-radius: 4px;
+          color: #fff;
+          font: inherit;
+          padding: 1rem;
+          width: 100%;
         }
         
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .input-group input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        button[type="submit"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 4px;
-            background-color: #28a745; /* Green color */
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        form input[type='password'],
+        form input[type='text'] {
+          background-color: #3b4148;
+          border-radius: 0 px 4px 0;
+      
         }
         
-        button[type="submit"]:hover {
-            background-color: #218838; /* Darker green color on hover */
+        form input[type='password']:focus,
+        form input[type='password']:hover,
+        form input[type='text']:focus,
+        form input[type='text']:hover {
+          background-color: #434a52;
+          outline: green;
         }
-
-        @keyframes slide-in-bck {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        
+        form input[type='submit'] {
+          cursor: pointer;
+          font-weight: 600;
+          padding: 1rem;
+          padding: calc(1rem - 2px);
+          transition: all 0.2s ease;
+          background: rgba(34, 145, 0, 0.831);
+          
+          &:focus {
+            background: red;
+            outline: none;
+          }       
+          
+          &:hover {
+            background: rgb(181, 71, 255);
+            outline: none;
+          }       
+      
+          &:active {
+            background: red-dark;
+          }
         }
+        
+        form label {
+          background-color: #363b41;
+          border-radius: 4px 0 0 4px;
+          padding: 1rem;
+        }
+      
+      .Forgot {
+        margin-top: 9px;
+        display: block;
+        color: rgb(255, 255, 255);
+      }
+      
     </style>
-</head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-                <h2>Login to Raspberrypi Pico W Webserver</h2>
-        </div>
-        <img src="https://th.element14.com/productimages/standard/en_GB/3996082-40.jpg" alt="Raspberry pi pico w">
-        <form action="/login_process.php" method="post">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  </head>
+  <body class="dark" style="background-color: rgb(51, 51, 51);">
+    <div class="card">
+      <button type="button" onclick="toggleDarkMode(event)">Light</button>
+      
+      <span class="material-symbols-outlined">
+        skull
+        </span>
+      
+      <h1>Welcome</h1>
+      <form action="/login_process.php" class="hidden" method="post">
+        <section>
+          <div class="field">
+            <label for="username"><span class="material-symbols-outlined" style="color: floralwhite;">
+                face
+                </span></label>
+            <input type="text" name="username" placeholder="Username">
+          </div>
+          <div class="field">
+            <label for="password"><span class="material-symbols-outlined" style="color: floralwhite;">
+                lock
+                </span></label>
+            <input type="password" name="password" placeholder="Password">
+          </div>
+            <div>
+              
+              <input type="submit" value="Log in" class="primary disabled">
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+  
+            <div class="link">
+              <a target="_blank" href="https://www.facebook.com/phubadee.thanakhan">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_(2019).png/1024px-Facebook_Logo_(2019).png" alt="facebook" class="icon">
+              </a>
+              <a target="__blank" href="https://www.instagram.com/ds_zct/">
+                <img src="https://webstockreview.net/images/information-clipart-transparent-19.png" alt="instagram" class="icon">
+              </a>
+              <a target="_blank" href="https://github.com/ThemeHackers/">
+                <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="github" class="icon github">
+              </a>
             </div>
-            <button type="submit">Login</button>
-        </form>
-    </div>
-
-</body>
-</html>
-
+      
+      <script>
+              
+             function toggleDarkMode(e) {
+               const body = document.body;
+               const storage = localStorage.getItem('theme');
+               if (storage == 'dark') {
+                   e.target.innerText = "Dark";
+                 body.classList.remove('dark');
+                 localStorage.setItem('theme', 'light');
+               } else {
+                   e.target.innerText = "Light";
+                 body.classList.add('dark');
+                 localStorage.setItem('theme', 'dark');
+                 body.style.backgroundColor = '#333333'; 
+               }
+             }
+             
+      </script>
+  
+  
+  </section></form></div></body></html>
